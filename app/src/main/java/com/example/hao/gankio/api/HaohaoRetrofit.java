@@ -30,10 +30,10 @@ public class HaohaoRetrofit {
                 .build();
 
         Retrofit retrofit = new retrofit2.Retrofit.Builder()
-                .client(client)
                 .baseUrl("http://gank.io/api/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(new OkHttpClient())
                 .build();
         gankService = retrofit.create(GankApi.class);
     }

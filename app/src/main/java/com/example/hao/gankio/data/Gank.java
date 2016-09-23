@@ -37,4 +37,12 @@ import java.util.Date;
     @Column("createdAt") public Date createdAt;
     @Column("updatedAt") public Date updatedAt;
     @Column("publishedAt") public Date publishedAt;
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 }

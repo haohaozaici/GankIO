@@ -16,6 +16,14 @@ public class Meizhi extends Add{
     @Column("type") public String desc;
     @Column("publishedAt") public Date publishedAt;
 
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
     /*"_id": "57e1c76c421aa95bd05015f2",
             "createdAt": "2016-09-21T07:34:04.60Z",
             "desc": "9-21",

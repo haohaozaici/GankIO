@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.example.hao.gankio.data.Gank;
 import com.example.hao.gankio.data.Meizhi;
 
 import java.util.Date;
@@ -28,10 +29,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     public final static String TAG = "MeizhiList";
 
-    private List<Meizhi> mMeizhiList;
+    private List<Gank> mMeizhiList;
     private Context mContext;
 
-    public MainAdapter(Context context, List<Meizhi> meizhiList) {
+    public MainAdapter(Context context, List<Gank> meizhiList) {
         this.mMeizhiList = meizhiList;
         this.mContext = context;
 
@@ -47,7 +48,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final int positions = holder.getAdapterPosition();
 
-        Meizhi meizhi = mMeizhiList.get(positions);
+        Gank meizhi = mMeizhiList.get(positions);
         int limit = 48;
         String text = meizhi.desc.length() > limit ? meizhi.desc.substring(0, limit) + "..." : meizhi.desc;
         holder.title.setText(text);
@@ -91,12 +92,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.meizhi_img)
-        ImageView meizhi_img;
-        @BindView(R.id.title)
-        TextView title;
-        @BindView(R.id.card)
-        LinearLayout card;
+        @BindView(R.id.meizhi_img) ImageView meizhi_img;
+        @BindView(R.id.title) TextView title;
+        @BindView(R.id.card) LinearLayout card;
 
         public ViewHolder(View itemView) {
             super(itemView);
