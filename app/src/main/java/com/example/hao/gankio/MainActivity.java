@@ -104,21 +104,21 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         mLastVideoIndex = 0;
 
         Subscription s = Observable
-                .zip(sGankIO.getMeizhiData(mPage), sGankIO.get休息视频Data(mPage) ,this::createMeizhiDataWith休息视频Desc)
+                .zip(sGankIO.getMeizhiData(mPage), sGankIO.get休息视频Data(mPage), this::createMeizhiDataWith休息视频Desc)
                 .map(meizhiData -> meizhiData.results)
                 .flatMap(Observable::from)
                 .toSortedList(((meizhi, meizhi2) -> meizhi2.publishedAt.compareTo(meizhi.publishedAt)))
                 .doOnNext(this::saveMeizhis)
                 .observeOn(AndroidSchedulers.mainThread())
-//                .finallyDo(())
-        .subscribe(meizhiList -> {
-            if (clean){
-                mMeizhiList.clear();
-                mMeizhiList.addAll(meizhiList);
-                mMainAdapter.notifyDataSetChanged();
-                setRefresh(false);
-            }
-        }, throwable -> loadError(throwable));
+                .finallyDo(() -> setRefresh(false))
+                .subscribe(meizhiList -> {
+                    if (clean) {
+                        mMeizhiList.clear();
+                        mMeizhiList.addAll(meizhiList);
+                        mMainAdapter.notifyDataSetChanged();
+                        setRefresh(false);
+                    }
+                }, throwable -> loadError(throwable));
 
         addSubscription(s);
     }
