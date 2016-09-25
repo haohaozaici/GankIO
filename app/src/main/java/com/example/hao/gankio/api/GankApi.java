@@ -7,6 +7,7 @@ import com.example.hao.gankio.data.休息视频Data;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 import rx.Observable;
 
 /**
@@ -27,5 +28,7 @@ public interface GankApi {
 
     @GET("data/休息视频/" + HaohaoFactory.meizhiSize + "/{page}")
     Call<GankBean> get休息视频Data2(@Path("page") int page);
+
+//    @GET("{username}") Call(String name)
 
 }

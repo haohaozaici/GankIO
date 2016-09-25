@@ -29,7 +29,7 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/week_hot"
-        android:layout_width="wrap_content"
+        android:layout_width="81dp"
         android:layout_height="wrap_content"
         android:layout_gravity="right|bottom"
         android:layout_marginBottom="16dp"
@@ -37,5 +37,6 @@
         android:src="@mipmap/ic_github"
         app:layout_behavior="com.example.hao.gankio.widget.ScrollAwareFABBehavior"
         />
+
 
 </android.support.design.widget.CoordinatorLayout>

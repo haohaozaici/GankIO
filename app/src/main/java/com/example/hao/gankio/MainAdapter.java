@@ -55,13 +55,13 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startGankActivity(mMeizhiList.get(positions).publishedAt);
+//                startGankActivity(mMeizhiList.get(positions).publishedAt);
             }
         });
 
         Glide.with(mContext)
                 .load(meizhi.url)
-                .centerCrop()
+                .fitCenter()
                 .into(holder.meizhi_img)
                 .getSize(new SizeReadyCallback() {
                     @Override
@@ -80,10 +80,10 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         mContext.startActivity(intent);
     }
 
-    @Override
-    public void onViewRecycled(ViewHolder holder){
-        super.onViewRecycled(holder);
-    }
+//    @Override
+//    public void onViewRecycled(ViewHolder holder){
+//        super.onViewRecycled(holder);
+//    }
 
     @Override
     public int getItemCount() {

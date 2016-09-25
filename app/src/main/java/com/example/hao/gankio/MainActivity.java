@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.example.hao.gankio.acitivity.HaoSwipeToRefreshActivity;
 import com.example.hao.gankio.api.GankApi;
@@ -50,7 +51,8 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
 
 
     private int mPage = 1;
-    private int mLastVideoIndex = 0;
+    private int mIndex = (mPage - 1) * 10;
+    private boolean addComplete = false;
 
 
     @Override
@@ -64,13 +66,24 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         QueryBuilder query = new QueryBuilder(Meizhi.class);
         query.appendOrderDescBy("publishedAt");
         query.limit(0, 10);
-        mMeizhiList.addAll(sDb.query(query));
-
-        loadMeizhi(mPage);
-        loadVideo(mPage);
+//        mMeizhiList.addAll(sDb.query(query));
 
         setupRecyclerView();
 
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        new Handler().postDelayed(() -> setRefresh(true), 358);
+        getData(true);
+    }
+
+    @Override
+    public void requestDataRefresh() {
+        super.requestDataRefresh();
+        mPage = 1;
+        getData(true);
     }
 
     private void loadVideo(int mPage) {
@@ -86,11 +99,10 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
             @Override
             public void onResponse(Call<GankBean> call, Response<GankBean> response) {
                 GankBean gankBean = response.body();
-
                 for (int i = 0; i < gankBean.results.size(); i++) {
-                    mMeizhiList.add(i, gankBean.results.get(i));
+                    mMeizhiList.add(mIndex + i, gankBean.results.get(i));
                 }
-                Log.e("cylog", mMeizhiList.toString());
+                addComplete = true;
             }
 
             @Override
@@ -113,15 +125,17 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
             @Override
             public void onResponse(Call<GankBean> call, Response<GankBean> response) {
                 GankBean gankBean = response.body();
-                if (mMeizhiList.size() != 0) {
+                if (addComplete && mMeizhiList.size() != 0) {
                     for (int i = 0; i < gankBean.results.size(); i++) {
-                        mMeizhiList.get(i).setUrl(gankBean.results.get(i).url);
+                        mMeizhiList.get(mIndex + i).setUrl(gankBean.results.get(i).url);
+                        Log.e("cylog", mMeizhiList.get(i).toString());
                     }
+                    addComplete = false;
                 }
 
-                Log.e("cylog", gankBean.toString());
                 mMainAdapter.notifyDataSetChanged();
-//                saveMeizhis()
+                setRefresh(false);
+//                saveMeizhis(mMeizhiList);
             }
 
             @Override
@@ -140,13 +154,6 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
 //        }
     }
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        new Handler().postDelayed(() -> setRefresh(true), 358);
-//        loadData(true);
-    }
-
 
     private void setupRecyclerView() {
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_list);
@@ -156,6 +163,17 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         mRecyclerView.setAdapter(mMainAdapter);
 
         mRecyclerView.addOnScrollListener(getOnBottomListener(layoutManager));
+
+    }
+
+    private void getData(boolean clean) {
+        if (clean) {
+            mMeizhiList.clear();
+            mPage = 1;
+            mIndex = (mPage - 1) * 10;
+        }
+        loadVideo(mPage);
+        loadMeizhi(mPage);
 
     }
 
@@ -202,7 +220,7 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
                 .show();
     }
 
-    private void saveMeizhis(List<Meizhi> meizhis) {
+    private void saveMeizhis(List<Gank> meizhis) {
         sDb.insert(meizhis, ConflictAlgorithm.Replace);
     }
 
@@ -214,19 +232,19 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
 //        return data;
 //    }
 
-    private String getFirstVideoDesc(Date publishedAt, List<Gank> results) {
-        String videoDesc = "";
-        for (int i = mLastVideoIndex; i < results.size(); i++) {
-            Gank video = results.get(i);
-            if (video.publishedAt == null) video.publishedAt = video.createdAt;
-            if (Dates.isTheSameDay(publishedAt, video.publishedAt)) {
-                videoDesc = video.desc;
-                mLastVideoIndex = i;
-                break;
-            }
-        }
-        return videoDesc;
-    }
+//    private String getFirstVideoDesc(Date publishedAt, List<Gank> results) {
+//        String videoDesc = "";
+//        for (int i = mLastVideoIndex; i < results.size(); i++) {
+//            Gank video = results.get(i);
+//            if (video.publishedAt == null) video.publishedAt = video.createdAt;
+//            if (Dates.isTheSameDay(publishedAt, video.publishedAt)) {
+//                videoDesc = video.desc;
+//                mLastVideoIndex = i;
+//                break;
+//            }
+//        }
+//        return videoDesc;
+//    }
 
     RecyclerView.OnScrollListener getOnBottomListener(StaggeredGridLayoutManager layoutManager) {
         return new RecyclerView.OnScrollListener() {
@@ -239,7 +257,8 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
                     if (!mIsFirstTimeTouchBottom) {
                         mSwipeRefreshLayout.setRefreshing(true);
                         mPage += 1;
-//                        loadData();
+                        mIndex = (mPage - 1) * 10;
+                        getData(false);
                     } else {
                         mIsFirstTimeTouchBottom = false;
                     }
