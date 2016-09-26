@@ -13,13 +13,16 @@ import com.example.hao.gankio.api.Network;
 import com.example.hao.gankio.data.Android;
 import com.example.hao.gankio.utils.AndroidResultsToAndroidMapper;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
 public class MainActivity extends HaoSwipeToRefreshActivity {
@@ -68,12 +71,27 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         setRefresh(true);
 
         unsubscribe();
-        subscription = Network.getGankApi()
-                .getAndroid(mPage)
-                .map(AndroidResultsToAndroidMapper.getInstance())
+        subscription = rx.Observable
+                .zip(Network.getGankApi().getAndroid(mPage).map(AndroidResultsToAndroidMapper.getInstance()),
+                        Network.getGankApi().getMeizhi(mPage).map(AndroidResultsToAndroidMapper.getInstance()),
+                                new Func2<List<Android>, List<Android>, List<Android>>() {
+                                    @Override
+                                    public List<Android> call(List<Android> androidDesc, List<Android> meizhiImg) {
+                                        List<Android> androidList = new ArrayList<Android>(androidDesc.size());
+                                        for (int i = 0; i < androidDesc.size(); i++) {
+                                            Android android = new Android();
+                                            android.desc = androidDesc.get(i).desc;
+                                            android.url = meizhiImg.get(i).url;
+                                            android.publishedAt = meizhiImg.get(i).desc;
+                                            androidList.add(android);
+                                        }
+                                        return androidList;
+                                    }
+                                })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
+
 
     }
 

@@ -34,18 +34,16 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         Android android = androids.get(position);
-        if (android.images != null) {
-            String url = android.images.get(0);
-
-            Glide.with(holder.itemView.getContext())
-                    .load(url)
-                    .fitCenter()
-                    .into(holder.meizhi_img);
-        }
+        String url = android.url;
+        Glide.with(holder.itemView.getContext())
+                .load(url)
+                .fitCenter()
+                .into(holder.meizhi_img);
 
         int limit = 48;
         String text = android.desc.length() > limit ? android.desc.substring(0, limit) + "..." : android.desc;
-        holder.title.setText(text);
+        String desc = android.publishedAt + " " + text;
+        holder.title.setText(desc);
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

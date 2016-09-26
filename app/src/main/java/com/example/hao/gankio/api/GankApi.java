@@ -15,5 +15,8 @@ public interface GankApi {
     @GET("data/Android/10/{page}" )
     Observable<AndroidResult> getAndroid(@Path("page")int page );
 
+    @GET("data/福利/10/{page}")
+    Observable<AndroidResult> getMeizhi(@Path("page")int page);
+
 
 }
