@@ -1,8 +1,7 @@
 package com.example.hao.gankio;
 
-import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.example.hao.gankio.data.Gank;
-import com.example.hao.gankio.data.Meizhi;
+import com.example.hao.gankio.data.Android;
 
-import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
@@ -27,30 +23,28 @@ import butterknife.ButterKnife;
 
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
-    public final static String TAG = "MeizhiList";
-
-    private List<Gank> mMeizhiList;
-    private Context mContext;
-
-    public MainAdapter(Context context, List<Gank> meizhiList) {
-        this.mMeizhiList = meizhiList;
-        this.mContext = context;
-
-    }
+    private List<Android> androids;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_meizhi, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_meizhi, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final int positions = holder.getAdapterPosition();
+        Android android = androids.get(position);
+        if (android.images != null) {
+            String url = android.images.get(0);
 
-        Gank meizhi = mMeizhiList.get(positions);
+            Glide.with(holder.itemView.getContext())
+                    .load(url)
+                    .fitCenter()
+                    .into(holder.meizhi_img);
+        }
+
         int limit = 48;
-        String text = meizhi.desc.length() > limit ? meizhi.desc.substring(0, limit) + "..." : meizhi.desc;
+        String text = android.desc.length() > limit ? android.desc.substring(0, limit) + "..." : android.desc;
         holder.title.setText(text);
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,42 +53,26 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
             }
         });
 
-        Glide.with(mContext)
-                .load(meizhi.url)
-                .fitCenter()
-                .into(holder.meizhi_img)
-                .getSize(new SizeReadyCallback() {
-                    @Override
-                    public void onSizeReady(int width, int height) {
-                        if (!holder.card.isShown()) {
-                            holder.card.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-
     }
-
-    private void startGankActivity(Date publishedAt) {
-        Intent intent = new Intent(mContext, GankActivity.class);
-        intent.putExtra(GankActivity.EXTRA_GANK_DATE, publishedAt);
-        mContext.startActivity(intent);
-    }
-
-//    @Override
-//    public void onViewRecycled(ViewHolder holder){
-//        super.onViewRecycled(holder);
-//    }
 
     @Override
     public int getItemCount() {
-        return mMeizhiList.size();
+        return androids == null ? 0 : androids.size();
+    }
+
+    public void setItems(List<Android> androids) {
+        this.androids = androids;
+        notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.meizhi_img) ImageView meizhi_img;
-        @BindView(R.id.title) TextView title;
-        @BindView(R.id.card) LinearLayout card;
+        @BindView(R.id.meizhi_img)
+        ImageView meizhi_img;
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.card)
+        LinearLayout card;
 
         public ViewHolder(View itemView) {
             super(itemView);
