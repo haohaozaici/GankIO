@@ -1,5 +1,6 @@
 package com.example.hao.gankio;
 
+import android.app.Activity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.example.hao.gankio.acitivity.BaseActivity;
 import com.example.hao.gankio.data.Android;
 
 import java.util.List;
@@ -26,6 +28,7 @@ import butterknife.ButterKnife;
 public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
     private List<Android> androids;
+    private MainActivity activity;
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -40,6 +43,7 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         Glide.with(holder.itemView.getContext())
                 .load(url)
                 .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.meizhi_img)
                 .getSize(new SizeReadyCallback() {
                     @Override
@@ -52,12 +56,18 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
 
         int limit = 48;
         String text = android.desc.length() > limit ? android.desc.substring(0, limit) + "..." : android.desc;
-        String desc = android.publishedAt + " " + text;
+        String desc = android.publishedAt.substring(5, 10) + " " + text;
         holder.title.setText(desc);
         holder.card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                startGankActivity(mMeizhiList.get(positions).publishedAt);
+                String date = android.publishedAt;
+                String year, month, day;
+                year = date.substring(0, 4);
+                month = date.substring(5, 7);
+                day = date.substring(8, 10);
+                String url = "http://gank.io/" + year + "/" + month + "/" + day;
+                activity.openWebsite(activity, url);
             }
         });
 
@@ -68,10 +78,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         return androids == null ? 0 : androids.size();
     }
 
-    public void setItems(List<Android> androids) {
+    public void setItems(MainActivity activitys, List<Android> androids) {
         this.androids = androids;
+        this.activity = activitys;
         notifyDataSetChanged();
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
