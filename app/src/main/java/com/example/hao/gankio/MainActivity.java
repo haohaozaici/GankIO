@@ -15,7 +15,6 @@ import com.example.hao.gankio.utils.AndroidResultsToAndroidMapper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +34,7 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
     private MainAdapter mMainAdapter = new MainAdapter();
 
     private boolean mIsFirstTimeTouchBottom = true;
+    private List<Android> mainList = new ArrayList<>();
     private int mPage = 1;
 
     Observer<List<Android>> observer = new Observer<List<Android>>() {
@@ -52,7 +52,8 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         @Override
         public void onNext(List<Android> androids) {
             setRefresh(false);
-            mMainAdapter.setItems(androids);
+            mainList.addAll(androids);
+            mMainAdapter.setItems(mainList);
         }
     };
 
@@ -105,6 +106,7 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
     @Override
     public void requestDataRefresh() {
         super.requestDataRefresh();
+        mainList.clear();
         mPage = 1;
         loadData();
     }

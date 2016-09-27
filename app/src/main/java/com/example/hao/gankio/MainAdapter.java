@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.example.hao.gankio.data.Android;
 
 import java.util.List;
@@ -38,7 +40,15 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
         Glide.with(holder.itemView.getContext())
                 .load(url)
                 .fitCenter()
-                .into(holder.meizhi_img);
+                .into(holder.meizhi_img)
+                .getSize(new SizeReadyCallback() {
+                    @Override
+                    public void onSizeReady(int width, int height) {
+                        if (!holder.card.isShown()) {
+                            holder.card.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
 
         int limit = 48;
         String text = android.desc.length() > limit ? android.desc.substring(0, limit) + "..." : android.desc;
