@@ -1,6 +1,14 @@
 package com.example.hao.gankio.acitivity;
 
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsClient;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.app.AppCompatActivity;
+
+import com.example.hao.gankio.R;
 
 import rx.Subscription;
 
@@ -22,5 +30,18 @@ public class BaseActivity extends AppCompatActivity {
         if (subscription != null && !subscription.isUnsubscribed()) {
             subscription.unsubscribe();
         }
+    }
+
+    public void openWebsite(Activity context, String url) {
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setToolbarColor(getResources().getColor(R.color.colorAccent))
+                .setShowTitle(true);
+        builder.build().launchUrl(context, Uri.parse(url));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        CustomTabsClient.connectAndInitialize(getApplicationContext(), "com.android.chrome");
     }
 }

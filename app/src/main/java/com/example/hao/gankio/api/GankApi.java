@@ -12,10 +12,10 @@ import rx.Observable;
 
 public interface GankApi {
 
-    @GET("data/Android/10/{page}" )
+    @GET("data/Android/30/{page}" )
     Observable<AndroidResult> getAndroid(@Path("page")int page );
 
-    @GET("data/福利/10/{page}")
+    @GET("data/福利/30/{page}")
     Observable<AndroidResult> getMeizhi(@Path("page")int page);
 
 

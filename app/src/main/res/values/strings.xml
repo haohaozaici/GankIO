@@ -3,5 +3,12 @@
 
     <string name="snap_load_fail">加载失败，请重试</string>
     <string name="retry">重试</string>
+    <string name="url_github_trending_javaweek">https://github.com/trending/java?since=weekly</string>
+
+    <!--about-->
+    <string name="about_me">About me</string>
+    <string name="GitHub">https://github.com/haohaozaici/GankIO</string>
+    <string name="Alipay">aex01712umbanmkz7i1fs7f</string>
+    <string name="donate">358297604@qq.com(点击跳转到支付宝)</string>
 
 </resources>

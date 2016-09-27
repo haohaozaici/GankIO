@@ -1,13 +1,18 @@
 package com.example.hao.gankio;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.hao.gankio.acitivity.AboutMe;
 import com.example.hao.gankio.acitivity.HaoSwipeToRefreshActivity;
 import com.example.hao.gankio.api.Network;
 import com.example.hao.gankio.data.Android;
@@ -53,7 +58,7 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         public void onNext(List<Android> androids) {
             setRefresh(false);
             mainList.addAll(androids);
-            mMainAdapter.setItems(mainList);
+            mMainAdapter.setItems(MainActivity.this, mainList);
         }
     };
 
@@ -63,7 +68,8 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("haohaozaici");
         setupRecyclerView();
 
     }
@@ -75,20 +81,20 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         subscription = rx.Observable
                 .zip(Network.getGankApi().getAndroid(mPage).map(AndroidResultsToAndroidMapper.getInstance()),
                         Network.getGankApi().getMeizhi(mPage).map(AndroidResultsToAndroidMapper.getInstance()),
-                                new Func2<List<Android>, List<Android>, List<Android>>() {
-                                    @Override
-                                    public List<Android> call(List<Android> androidDesc, List<Android> meizhiImg) {
-                                        List<Android> androidList = new ArrayList<Android>(androidDesc.size());
-                                        for (int i = 0; i < androidDesc.size(); i++) {
-                                            Android android = new Android();
-                                            android.desc = androidDesc.get(i).desc;
-                                            android.url = meizhiImg.get(i).url;
-                                            android.publishedAt = meizhiImg.get(i).desc;
-                                            androidList.add(android);
-                                        }
-                                        return androidList;
-                                    }
-                                })
+                        new Func2<List<Android>, List<Android>, List<Android>>() {
+                            @Override
+                            public List<Android> call(List<Android> androidDesc, List<Android> meizhiImg) {
+                                List<Android> androidList = new ArrayList<Android>(androidDesc.size());
+                                for (int i = 0; i < androidDesc.size(); i++) {
+                                    Android android = new Android();
+                                    android.desc = androidDesc.get(i).desc;
+                                    android.url = meizhiImg.get(i).url;
+                                    android.publishedAt = meizhiImg.get(i).publishedAt;
+                                    androidList.add(android);
+                                }
+                                return androidList;
+                            }
+                        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
@@ -114,9 +120,7 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
 
     @OnClick(R.id.week_hot)
     public void onFab(View v) {
-//        if (mMeizhiList != null && mMeizhiList.size() > 0) {
-//            startGankActivity(mMeizhiList.get(0).publishedAt);
-//        }
+        openWebsite(this, getString(R.string.url_github_trending_javaweek));
     }
 
     private void setupRecyclerView() {
@@ -126,6 +130,24 @@ public class MainActivity extends HaoSwipeToRefreshActivity {
         mRecyclerView.setAdapter(mMainAdapter);
         mRecyclerView.addOnScrollListener(getOnBottomListener(layoutManager));
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.about:
+                Intent i = new Intent(this, AboutMe.class);
+                startActivity(i);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 
     RecyclerView.OnScrollListener getOnBottomListener(StaggeredGridLayoutManager layoutManager) {
