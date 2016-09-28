@@ -12,6 +12,7 @@ public class Android {
     public String desc;
     public String publishedAt;
     public String url;
+    public String type;
     public ArrayList<String> images;
 
 

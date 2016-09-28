@@ -13,6 +13,7 @@ public class AndroidResult {
     public @SerializedName("results") List<Android> MainResults;
 
 
+
     /*{
   "error": false,
   "results": [
@@ -31,7 +32,7 @@ public class AndroidResult {
       ],
       "publishedAt": "2016-09-26T11:52:58.626Z",
       "source": "chrome",
-      "type": "Android",
+      "type": "android",
       "url": "https://github.com/ghuiii/AnimateVectorDrawableDEMO",
       "used": true,
       "who": "代码家"

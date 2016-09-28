@@ -24,6 +24,11 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".acitivity.DetailsActivity"
+            android:theme="@style/AppTheme.noActionBar"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".acitivity.AboutMe"
             android:parentActivityName=".MainActivity"

@@ -12,4 +12,5 @@
     <color name="refresh_progress_2">#00b0ff</color>
     <color name="refresh_progress_3">@color/colorPrimary</color>
     <color name="black">#C0000000</color>
+    <color name="white">#FFFFFF</color>
 </resources>

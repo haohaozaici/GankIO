@@ -34,7 +34,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public void openWebsite(Activity context, String url) {
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-        builder.setToolbarColor(getResources().getColor(R.color.colorAccent))
+        builder.setToolbarColor(context.getResources().getColor(R.color.colorAccent))
                 .setShowTitle(true);
         builder.build().launchUrl(context, Uri.parse(url));
     }

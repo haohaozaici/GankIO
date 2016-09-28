@@ -1,6 +1,7 @@
 package com.example.hao.gankio;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,8 +13,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.cache.InternalCacheDiskCacheFactory;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 import com.example.hao.gankio.acitivity.BaseActivity;
+import com.example.hao.gankio.acitivity.DetailsActivity;
 import com.example.hao.gankio.data.Android;
 
 import java.util.List;
@@ -67,7 +70,12 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> {
                 month = date.substring(5, 7);
                 day = date.substring(8, 10);
                 String url = "http://gank.io/" + year + "/" + month + "/" + day;
-                activity.openWebsite(activity, url);
+//                activity.openWebsite(activity, url);
+                Intent intent = new Intent(activity, DetailsActivity.class);
+                intent.putExtra("year", year);
+                intent.putExtra("month", month);
+                intent.putExtra("day", day);
+                activity.startActivity(intent);
             }
         });
 

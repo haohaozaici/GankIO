@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:padding="6dp">
+
+    <LinearLayout
+        android:id="@+id/category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:orientation="horizontal"
+        android:paddingBottom="4dp"
+        android:paddingTop="2dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/details_category_img"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/android" />
+
+        <TextView
+            android:id="@+id/details_category_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="6dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center|start"
+            android:text="Android"
+            android:textSize="18sp"
+
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/details_item"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_marginLeft="12dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_gravity="center"
+            android:src="@drawable/circle" />
+
+        <TextView
+            android:id="@+id/details_item_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="6dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="center|start"
+            android:padding="6dp"
+            android:text="android" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
